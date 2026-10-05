@@ -24,18 +24,35 @@ validator_keysディレクトリ内にdeposit.jsonとkeysrore.jsonを作るこ�
 ### import keys
 1. validator_keysディレクトリ内のkeysrore.jsonから鍵をインポートします、これによりwalletディレクトリ内に情報が書き込まれます
     ```
-    docker run -it -v $(pwd)/validator_keys:/keys \
-        -v $(pwd)/wallet:/wallet \
+    docker run --rm -it \
+        -v "$(pwd)/validator_keys:/keys" \
+        -v "$(pwd)/wallet:/wallet" \
+        -v "$(pwd)/wallet-password.txt:/wallet-password.txt:ro" \
         gcr.io/prysmaticlabs/prysm/validator:stable \
-        --name validator \
+        accounts import \
         --accept-terms-of-use \
-        accounts import --keys-dir=/keys --wallet-dir=/wallet
+        --keys-dir=/keys \
+        --wallet-dir=/wallet \
+        --wallet-password-file=/wallet-password.txt
     ```
 
 1. 設定したウォレットパスワードを書込みます、以下のファイルにパスワードだけを書き込みます  
     `wallet-password.txt`
 
     これをしない場合、起動のたびにパスワードを入力する必要があります
+
+### import成功の確認
+1. 正しくインポートされたかどうかをリスト形式で確認します
+    ```
+    docker run --rm -it \
+        -v "$(pwd)/wallet:/wallet" \
+        -v "$(pwd)/wallet-password.txt:/wallet-password.txt:ro" \
+        gcr.io/prysmaticlabs/prysm/validator:stable \
+        accounts list \
+        --accept-terms-of-use \
+        --wallet-dir=/wallet \
+        --wallet-password-file=/wallet-password.txt
+    ```
 
 ## validatorの起動
 - beacon-nodeのIPを`mainnet.env`または`holeskyli.env`の`BEACON_RPC`に設定します
