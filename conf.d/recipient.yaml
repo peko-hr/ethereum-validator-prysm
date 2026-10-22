@@ -8,4 +8,4 @@ default_config:
   fee_recipient: '0xBa04822fff3660F3247dAe77ec787649cD134Db8'
   builder:
       enabled: true
-      gas_limit: '30000000'
+      gas_limit: '200000000'
